@@ -7,7 +7,6 @@
 </template>
 
 <script>
-import EventService from '@/services/EventService';
 export default {
   props: {
     id: {
@@ -16,18 +15,14 @@ export default {
     },
   },
   created() {
-    EventService.getEvent(this.id)
-      .then((res) => {
-        this.event = res.data;
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    this.$store.dispatch('fetchEvent', this.id).catch((err) => {
+      this.$router.push({ name: 'error-display', params: { error: err } });
+    });
   },
-  data() {
-    return {
-      event: null,
-    };
+  computed: {
+    event() {
+      return this.$store.state.event;
+    },
   },
 };
 </script>

@@ -6,7 +6,6 @@
 </template>
 
 <script>
-import EventService from '@/services/EventService';
 import EventCard from '@/components/EventCard.vue';
 export default {
   name: 'EventList',
@@ -15,18 +14,14 @@ export default {
     EventCard,
   },
   created() {
-    EventService.getEvents()
-      .then((res) => {
-        this.events = res.data;
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    this.$store.dispatch('fetchEvents').catch((err) => {
+      this.$router.push({ name: 'error-display', params: { error: err } });
+    });
   },
-  data() {
-    return {
-      events: [],
-    };
+  computed: {
+    events() {
+      return this.$store.state.events;
+    },
   },
 };
 </script>
